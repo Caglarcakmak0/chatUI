@@ -7,7 +7,6 @@
           :chats="chats"
           :selectedChat="selectedChat"
           @select-chat="selectChat"
-          @toggle-profile="toggleUserProfile"
           :class="{ 'mobile-hidden': isMobile && selectedChat }"
         />
         <!-- Orta kısım - mesajlaşma alanı -->
@@ -27,9 +26,9 @@
         <welcome-screen v-else />
         <!-- Sağ taraftaki profil paneli -->
         <profile-panel 
-          v-if="showUserProfile || (selectedChat && isProfileOpen)"
-          :profile="userProfile || (selectedChat && selectedChat.contact)"
-          :isOpen="showUserProfile || isProfileOpen"
+          v-if="selectedChat"
+          :profile="selectedChat.contact"
+          :isOpen="isProfileOpen"
           @close="closeProfile"
           @block-contact="handleBlockContact"
         />
@@ -60,16 +59,6 @@ export default {
     const chats = ref(mockData.chats);
     const selectedChat = ref(null);
     const isProfileOpen = ref(false);
-    const showUserProfile = ref(false);
-    const userProfile = ref({
-      id: 'user',
-      name: 'Benim Profilim',
-      avatar: 'https://randomuser.me/api/portraits/lego/1.jpg',
-      phone: '+90 555 123 4567',
-      status: 'Merhaba! Ben WhatsApp kullanıyorum.',
-      media: [],
-      commonGroups: []
-    });
     const searchTerm = ref('');
     const isMobile = ref(window.innerWidth < 768);
     
@@ -97,14 +86,9 @@ export default {
     const toggleProfile = () => {
       isProfileOpen.value = !isProfileOpen.value;
     };
-    const toggleUserProfile = () => {
-      showUserProfile.value = !showUserProfile.value;
-      isProfileOpen.value = false;
-    };
     
     const closeProfile = () => {
       isProfileOpen.value = false;
-      showUserProfile.value = false;
     };   
     const backToChats = () => {
       if (isMobile.value) {
@@ -169,14 +153,11 @@ export default {
       chats,
       selectedChat,
       isProfileOpen,
-      showUserProfile,
-      userProfile,
       searchTerm,
       isMobile,
       filteredMessages,
       selectChat,
       toggleProfile,
-      toggleUserProfile,
       closeProfile,
       backToChats,
       searchMessages,
