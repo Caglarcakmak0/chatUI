@@ -26,8 +26,6 @@
         <ThreeDots v-model:show="showThreeDots" @menu-action="handleMenuAction" />
       </div>
     </div>
-    
-    <!-- Arama çubuğu -->
     <div v-if="showSearch" class="search-bar">
       <v-text-field
         v-model="searchValue"
@@ -51,8 +49,6 @@
         </v-btn>
       </div>
     </div>
-    
-    <!-- Mesajlar listesi -->
     <div class="messages-container" ref="messagesContainer">
       <div class="messages-list">
         <div 
@@ -78,9 +74,7 @@
         </div>
       </div>
     </div>
-    
-    <!-- Mesaj gönderme alanı -->
-    <div class="message-input-container">
+        <div class="message-input-container">
       <v-btn icon variant="text">
         <v-icon>mdi-emoticon-outline</v-icon>
       </v-btn>
@@ -105,11 +99,9 @@
     </div>
   </div>
 </template>
-
 <script>
 import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import ThreeDots from './ThreeDots.vue';
-
 export default {
   name: 'ChatArea',
   components: {
@@ -139,60 +131,47 @@ export default {
     const showThreeDots = ref(false);
     const searchValue = ref('');
     const messagesContainer = ref(null);
-    // Mobil cihazlarda geri tuşuna basıldığında
     const goBack = () => {
-      emit('back-to-chats');
-      
-      // Sohbet listesinin görünürlüğünü yeniden ayarla
+      emit('back-to-chats');  
       setTimeout(() => {
         const sidebar = document.querySelector('.chat-sidebar');
         if (sidebar) {
           sidebar.classList.remove('hidden');
         }
       }, 100);
-    };
-    
+    }
     // Arama terimini izle
     watch(() => props.searchTerm, (newVal) => {
       searchValue.value = newVal;
     });
-    
     // Mesaj gönderme
     const sendMessage = () => {
       if (newMessage.value.trim() === '') return;
       
       emit('send-message', newMessage.value);
-      newMessage.value = '';
-      
+      newMessage.value = '';   
       // Mesaj gönderildikten sonra mesajların en altına kaydır
       nextTick(() => {
         if (messagesContainer.value) {
           messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
       });
-    };
-    
-    // Aramayı temizle
+    }; 
     const clearSearch = () => {
       searchValue.value = '';
       emit('search-messages', '');
       showSearch.value = false;
     };
-    
-    // Mesaj içindeki arama terimini vurgula
     const highlightText = (text) => {
       if (!props.searchTerm) return text;
       
       const regex = new RegExp(`(${props.searchTerm})`, 'gi');
       return text.replace(regex, '<span class="highlight">$1</span>');
-    };
-    
-    // Mesaj zamanını formatla
-    const formatTime = (timestamp) => {
+    };  
+  const formatTime = (timestamp) => {
       const date = new Date(timestamp);
       return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-    };
-    
+    };  
     // Mesajlar güncellendiğinde en alta kaydır
     watch(() => props.messages, () => {
       nextTick(() => {
@@ -200,8 +179,7 @@ export default {
           messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
         }
       });
-    }, { deep: true });
-    
+    }, { deep: true });   
     // Menü aksiyonlarını işle
     const handleMenuAction = (action) => {
       switch(action) {
@@ -218,15 +196,11 @@ export default {
           emit('delete-chat', props.chat.id);
           break;
       }
-    };
-    
-    // Bileşen yüklendiğinde
+    };   
     onMounted(() => {
       if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-      }
-      
-      // Mobil cihazlarda sohbet açıldığında sidebar'ı gizle
+      }    
       if (props.isMobile) {
         const sidebar = document.querySelector('.chat-sidebar');
         if (sidebar) {
@@ -234,7 +208,7 @@ export default {
         }
       }
     });
-    
+
     return {
       newMessage,
       showSearch,
@@ -251,6 +225,9 @@ export default {
   }
 };
 </script>
+
+
+
 
 <style scoped lang="scss">
 .chat-main {
@@ -286,7 +263,6 @@ export default {
     margin-right: 10px;
   }
 }
-
 .header-left {
   display: flex;
   align-items: center;
@@ -307,7 +283,6 @@ export default {
   font-size: 16px;
   font-weight: 500;
 }
-
 .contact-status {
   font-size: 13px;
   color: #667781;
@@ -335,7 +310,6 @@ export default {
     }
   }
 }
-
 .messages-container {
   flex: 1;
   overflow-y: auto;
@@ -348,20 +322,19 @@ export default {
   flex-direction: column;
 }
 
+
+
 .message {
   max-width: 65%;
   &.sent {
     align-self: flex-end;
-    
     .message-content {
       background-color: #dcf8c6;
       border-radius: 8px 0 8px 8px;
     }
   }
-  
   &.received {
-    align-self: flex-start;
-    
+    align-self: flex-start; 
     .message-content {
       background-color: white;
       border-radius: 0 8px 8px 8px;
@@ -386,7 +359,6 @@ export default {
     padding: 0 2px;
   }
 }
-
 .message-meta {
   display: flex;
   justify-content: flex-end;
@@ -394,11 +366,9 @@ export default {
   font-size: 12px;
   color: #667781;
 }
-
 .message-time {
   margin-right: 4px;
 }
-
 .message-input-container {
   display: flex;
   align-items: center;
@@ -408,7 +378,6 @@ export default {
   min-height: 60px;
   width: 100%;
 }
-
 .message-input {
   flex: 1;
   margin: 0 10px;
@@ -422,51 +391,40 @@ export default {
     max-height: 100px;
   }
 }
-
-// Add responsive styles for different screen sizes
 @media (max-width: 768px) {
   .chat-header {
     padding: 8px 12px;
     min-height: 50px;
     border-left: none;
   }
-  
   .back-button {
     margin-right: 5px;
   }
-  
   .contact-info {
     margin-left: 0;
   }
-  
-  .messages-container {
+  .message {
     padding: 15px;
     max-height: calc(100% - 110px);
   }
-  
   .message-input-container {
     padding: 8px 12px;
     min-height: 50px;
   }
 }
-
 @media (max-width: 480px) {
   .chat-header {
     padding: 6px 8px;
   }
-  
   .contact-details {
     margin-left: 8px;
   }
-  
   .message {
     max-width: 85%;
   }
-  
   .messages-container {
     padding: 10px;
   }
-  
   .message-input-container {
     padding: 6px 8px;
   }

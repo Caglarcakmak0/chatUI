@@ -16,6 +16,7 @@
         </v-btn>
       </div>
     </div>
+
     <!-- Arama kutusu -->
     <div class="sidebar-search">
       <v-text-field
@@ -28,6 +29,9 @@
         class="search-input"
       ></v-text-field>
     </div>
+
+
+
     <!-- Sohbet listesi -->
     <div class="chats-list">
       <div
@@ -85,7 +89,6 @@ export default {
                chat.lastMessage.text.toLowerCase().includes(query);
       });
     });
-    
     // Sohbet seçildiğinde tetiklenir
     const onChatSelect = (chat) => {
       emit('select-chat', chat);
@@ -101,27 +104,22 @@ export default {
         }, 250);
       }
     };
-    
     // Zaman formatı
     const formatTime = (timestamp) => {
       const date = new Date(timestamp);
       const now = new Date();
-      
       // Aynı gün içindeyse saat:dakika formatında göster
       if (date.toDateString() === now.toDateString()) {
         return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
       }
-      
       // Aynı hafta içindeyse gün adını göster
       const daysDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
       if (daysDiff < 7) {
         return date.toLocaleDateString('tr-TR', { weekday: 'short' });
       }
-      
       // Diğer durumlar için gün/ay formatı
       return date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
     };
-    
     return {
       searchQuery,
       filteredChats,
@@ -260,20 +258,16 @@ export default {
   text-overflow: ellipsis;
 }
 
-// Add responsive styles
 @media (max-width: 992px) {
   .chat-item {
     padding: 10px 12px;
-  }
-  
+  } 
   .chat-name {
     font-size: 15px;
   }
-  
   .message-preview {
     font-size: 13px;
   }
-  
   .avatar {
     margin-right: 10px;
   }
@@ -284,11 +278,9 @@ export default {
     min-height: 50px;
     padding: 8px 12px;
   }
-  
   .sidebar-search {
     padding: 6px 8px;
   }
-  
   .chats-list {
     height: calc(100% - 100px);
   }
@@ -307,11 +299,9 @@ export default {
   .chat-item {
     padding: 10px 12px;
   }
-  
   .chat-name {
     font-size: 14px;
   }
-  
   .message-preview {
     font-size: 12px;
   }

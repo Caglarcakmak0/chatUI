@@ -21,11 +21,16 @@
   </div>
 </template>
 
+
+
+
+
 <script>
 export default {
   name: 'WelcomeScreen'
 };
 </script>
+
 
 <style scoped lang="scss">
 .welcome-screen {
@@ -36,14 +41,11 @@ export default {
   background-color: #f0f2f5;
   width: 100%;
 }
-
 .welcome-content {
   max-width: 560px;
   text-align: center;
 }
-
 .welcome-image {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,7 +59,6 @@ export default {
   color: #41525d;
   margin-bottom: 20px;
 }
-
 .welcome-text {
   color: #667781;
   font-size: 14px;
@@ -67,13 +68,14 @@ export default {
     margin-bottom: 10px;
   }
 }
-
 .welcome-footer {
   font-size: 14px;
   color: #8696a0;
   display: flex;
   align-items: center;
   justify-content: center;
+  
+
   
   .encryption-text {
     margin-left:  5px;

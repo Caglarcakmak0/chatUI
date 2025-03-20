@@ -9,7 +9,6 @@
           @select-chat="selectChat"
           :class="{ 'mobile-hidden': isMobile && selectedChat }"
         />
-        
         <!-- Orta kısım - mesajlaşma alanı -->
         <chat-area 
           v-if="selectedChat"
@@ -24,7 +23,6 @@
           class="chat-area-component"
         />
         <welcome-screen v-else />
-        
         <!-- Sağ taraftaki profil paneli -->
         <profile-panel 
           v-if="selectedChat"
@@ -37,13 +35,14 @@
   </v-app>
 </template>
 
+
 <script>
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import ChatSidebar from './components/ChatSidebar.vue';
 import ChatArea from './components/ChatArea.vue';
 import ProfilePanel from './components/ProfilePanel.vue';
 import WelcomeScreen from './components/WelcomeScreen.vue';
-import { generateMockData } from './utils/mockData';
+import { DummyData, generateMockData } from './utils/mockData';
 
 export default {
   name: 'App',
@@ -54,8 +53,7 @@ export default {
     WelcomeScreen
   },
   setup() {
-    // Mock verilerimiz - gerçek bir API'dan gelecek şekilde değiştirilebilir
-    const mockData = generateMockData();
+    const mockData = DummyData();
     
     const chats = ref(mockData.chats);
     const selectedChat = ref(null);
@@ -74,7 +72,6 @@ export default {
       );
     });
     
-    // Sohbeti seçme fonksiyonu
     const selectChat = (chat) => {
       selectedChat.value = chat;
       searchTerm.value = '';
@@ -87,22 +84,17 @@ export default {
         }
       }
     };
-    
-    // Profil panelini aç/kapat
     const toggleProfile = () => {
       isProfileOpen.value = !isProfileOpen.value;
     };
     
     const closeProfile = () => {
       isProfileOpen.value = false;
-    };
-    
-    // Mobil cihazlarda sohbet listesine dönme
+    };   
     const backToChats = () => {
       if (isMobile.value) {
         selectedChat.value = null;
         
-        // Sohbet alanını gizle ve listeyi göster
         const chatArea = document.querySelector('.chat-area-component');
         const sidebar = document.querySelector('.chat-sidebar');
         
@@ -116,12 +108,10 @@ export default {
         }
       }
     };
-    
     // Mesaj arama fonksiyonu
     const searchMessages = (term) => {
       searchTerm.value = term;
     };
-    
     // Yeni mesaj gönderme
     const sendMessage = (text) => {
       if (!text.trim() || !selectedChat.value) return;
@@ -142,22 +132,18 @@ export default {
         timestamp: new Date().toISOString()
       };
     };
-    
     // Ekran boyutunu kontrol et
     const checkScreenSize = () => {
       isMobile.value = window.innerWidth < 768;
     };
-    
     // Resize handler
     const resizeHandler = () => {
       checkScreenSize();
     };
-    
     // Bileşen monte edildiğinde
     onMounted(() => {
       window.addEventListener('resize', resizeHandler);
     });
-    
     // Bileşen kaldırıldığında
     onBeforeUnmount(() => {
       window.removeEventListener('resize', resizeHandler);
@@ -192,7 +178,6 @@ export default {
   width: 100vw;
   overflow: hidden;
 }
-
 .chat-container {
   display: flex;
   height: 100%;
@@ -200,23 +185,19 @@ export default {
   position: relative;
   overflow: hidden;
 }
-
 .mobile-hidden {
   @media (max-width: 768px) {
     display: none !important;
   }
 }
-
 :deep(.v-application__wrap) {
   min-height: 100vh;
   height: 100%;
 }
-
 :deep(.v-main) {
   height: 100vh;
   overflow: hidden;
 }
-
 :deep(.v-main__wrap) {
   height: 100%;
 }

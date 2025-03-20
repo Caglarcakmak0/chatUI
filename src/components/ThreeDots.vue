@@ -11,7 +11,6 @@
 
 <script>
 import { ref, onMounted, onUnmounted } from 'vue';
-
 export default {
   name: 'ThreeDots',
   props: {
@@ -21,36 +20,29 @@ export default {
     }
   },
   setup(props, { emit }) {
-    // Menü aksiyonlarını dinleme ve olayları yönetme
     const handleAction = (action) => {
       emit('menu-action', action);
-      emit('update:show', false); // Menüyü otomatik kapat
+      emit('update:show', false); //menü otomatikkapanır
     };
 
-    // Dışarıya tıklandığında menüyü kapatmak için
     const handleClickOutside = (event) => {
       if (props.show && !event.target.closest('.three-dots-menu') && !event.target.closest('.menu-trigger')) {
         emit('update:show', false);
       }
     };
-
-    // Component yüklendiğinde dışarı tıklamayı dinle
     onMounted(() => {
-      document.addEventListener('click', handleClickOutside);
+      document.addEventListener('click', handleClickOutside);//dışarıtıklanmafonksiyonu
     });
 
-    // Component kaldırıldığında dinlemeyi durdur
     onUnmounted(() => {
       document.removeEventListener('click', handleClickOutside);
     });
-
     return {
       handleAction
     };
   }
 };
 </script>
-
 <style scoped lang="scss">
 .three-dots-menu {
   position: absolute;
@@ -68,7 +60,6 @@ export default {
     padding: 0;
     margin: 0;
   }
-
   .menu-item {
     padding: 12px 16px;
     font-size: 14px;
@@ -79,7 +70,6 @@ export default {
     &:hover {
       background-color: #f5f5f5;
     }
-
     &:active {
       background-color: #e0e0e0;
     }

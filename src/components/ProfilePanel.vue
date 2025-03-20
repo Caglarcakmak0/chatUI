@@ -122,11 +122,9 @@ export default {
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 1200;
-  
   &.open {
     transform: translateX(0);
   }
-  
   @media (max-width: 992px) {
     width: 280px;
   }
@@ -135,7 +133,6 @@ export default {
     width: 100%;
   }
 }
-
 .panel-header {
   display: flex;
   align-items: center;
@@ -146,28 +143,23 @@ export default {
   top: 0;
   z-index: 10;
 }
-
 .panel-title {
   margin-left: 15px;
   font-size: 19px;
   font-weight: 500;
 }
-
 .panel-content {
   padding: 20px;
 }
-
 .profile-info {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
 }
-
 .profile-avatar {
   margin-bottom: 15px;
 }
-
 .profile-name {
   margin: 10px 0 5px;
   font-size: 22px;
@@ -185,6 +177,8 @@ export default {
   border-bottom: 1px solid #f0f2f5;
   padding-bottom: 15px;
 }
+
+
 
 .section-header {
   display: flex;
@@ -204,7 +198,6 @@ export default {
   margin: 0;
   font-size: 14px;
 }
-
 .status-text {
   color: #3b4a54;
 }
@@ -215,7 +208,6 @@ export default {
   grid-gap: 8px;
   margin-bottom: 10px;
 }
-
 .media-item {
   aspect-ratio: 1;
   border-radius: 8px;
@@ -228,7 +220,6 @@ export default {
   text-align: center;
   margin: 20px 0;
 }
-
 .groups-list {
   display: flex;
   flex-direction: column;
@@ -243,13 +234,11 @@ export default {
 .group-avatar {
   margin-right: 15px;
 }
-
 .group-name {
   margin: 0;
   font-size: 16px;
   font-weight: 500;
 }
-
 .profile-actions {
   margin-top: 30px;
   width: 100%;
@@ -264,29 +253,23 @@ export default {
   .panel-header {
     padding: 10px;
   }
-  
   .panel-content {
     padding: 15px;
   }
-  
   .profile-avatar {
     margin-bottom: 10px;
   }
-  
   .profile-info {
     margin-bottom: 20px;
   }
 }
-
 @media (max-width: 480px) {
   .panel-header {
     padding: 8px;
-  }
-  
-  .panel-content {
+  } 
+.panel-content {
     padding: 10px;
   }
-  
   .profile-section {
     margin-bottom: 15px;
     padding-bottom: 10px;

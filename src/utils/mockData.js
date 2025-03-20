@@ -1,5 +1,5 @@
 // Mock data generator for chats and contacts
-export function generateMockData() {
+export function DummyData() {
   // Ortak gruplar için veri
   const commonGroups = [
     { id: 1, name: "Arkadaşlar Grubu" },
