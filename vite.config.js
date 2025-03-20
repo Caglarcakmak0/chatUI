@@ -13,7 +13,6 @@ export default defineConfig({
     vueDevTools(),
     vuetify({ autoImport: true }),
     tailwindcss(),
-
   ],
   resolve: {
     alias: {

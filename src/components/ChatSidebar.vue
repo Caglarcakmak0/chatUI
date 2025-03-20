@@ -161,7 +161,6 @@ export default {
   
   .search-input {
     background-color: white;
-    border-radius: 20px;
   }
 }
 

@@ -35,14 +35,13 @@
   </v-app>
 </template>
 
-
 <script>
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import ChatSidebar from './components/ChatSidebar.vue';
 import ChatArea from './components/ChatArea.vue';
 import ProfilePanel from './components/ProfilePanel.vue';
 import WelcomeScreen from './components/WelcomeScreen.vue';
-import { DummyData } from './utils/mockData';
+import { DummyData,  } from './utils/mockData';
 
 export default {
   name: 'App',
@@ -61,7 +60,6 @@ export default {
     const searchTerm = ref('');
     const isMobile = ref(window.innerWidth < 768);
     
-    // Seçili sohbetin mesajlarını filtreleme
     const filteredMessages = computed(() => {
       if (!selectedChat.value) return [];
       
@@ -76,7 +74,6 @@ export default {
       selectedChat.value = chat;
       searchTerm.value = '';
       
-      // Mobil görünümde sohbeti göster
       if (isMobile.value) {
         const chatArea = document.querySelector('.chat-area-component');
         if (chatArea) {
@@ -108,11 +105,9 @@ export default {
         }
       }
     };
-    // Mesaj arama fonksiyonu
     const searchMessages = (term) => {
       searchTerm.value = term;
     };
-    // Yeni mesaj gönderme
     const sendMessage = (text) => {
       if (!text.trim() || !selectedChat.value) return;
       
@@ -132,23 +127,18 @@ export default {
         timestamp: new Date().toISOString()
       };
     };
-    // Ekran boyutunu kontrol et
     const checkScreenSize = () => {
       isMobile.value = window.innerWidth < 768;
     };
-    // Resize handler
     const resizeHandler = () => {
       checkScreenSize();
     };
-    // Bileşen monte edildiğinde
     onMounted(() => {
       window.addEventListener('resize', resizeHandler);
     });
-    // Bileşen kaldırıldığında
     onBeforeUnmount(() => {
       window.removeEventListener('resize', resizeHandler);
     });
-    
     return {
       chats,
       selectedChat,
@@ -166,7 +156,6 @@ export default {
   }
 };
 </script>
-
 <style scoped lang="scss">
 .chat-application {
   position: fixed;

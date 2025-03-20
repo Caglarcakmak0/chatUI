@@ -31,7 +31,7 @@ export default {
       }
     };
     onMounted(() => {   
-      document.addEventListener('click', handleClickOutside);//dışarıtıklanmafonksiyonu
+      document.addEventListener('click', handleClickOutside);//dışarı tıklanmafonksiyonu
     });
 
     onUnmounted(() => {

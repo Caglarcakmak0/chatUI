@@ -12,7 +12,7 @@
           </v-avatar>
           <div class="contact-details">
             <h3 class="contact-name">{{ chat.contact.name }}</h3>
-            <span class="contact-status">Çevrimiçi</span>
+            <span class="contact-status">Çevrim içi</span>
           </div>
         </div>
       </div>
@@ -144,13 +144,11 @@ export default {
     watch(() => props.searchTerm, (newVal) => {
       searchValue.value = newVal;
     });
-    // Mesaj gönderme
     const sendMessage = () => {
       if (newMessage.value.trim() === '') return;
       
       emit('send-message', newMessage.value);
       newMessage.value = '';   
-      // Mesaj gönderildikten sonra mesajların en altına kaydır
       nextTick(() => {
         if (messagesContainer.value) {
           messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
@@ -172,7 +170,6 @@ export default {
       const date = new Date(timestamp);
       return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
     };  
-    // Mesajlar güncellendiğinde en alta kaydır
     watch(() => props.messages, () => {
       nextTick(() => {
         if (messagesContainer.value) {
@@ -286,7 +283,6 @@ export default {
   font-size: 13px;
   color: #667781;
 }
-
 .search-bar {
   display: flex;
   padding: 8px 16 px;
@@ -297,7 +293,6 @@ export default {
   .search-input {
     flex: 1;
   }
-  
   .search-results {
     display: flex;
     align-items: center;
