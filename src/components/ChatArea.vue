@@ -20,9 +20,10 @@
         <v-btn icon variant="text" @click="showSearch = !showSearch">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-btn icon variant="text">
-          <v-icon>mdi-dots-vertical</v-icon>
+        <v-btn icon variant="text" class="menu-trigger">
+          <v-icon @click="showThreeDots = !showThreeDots">mdi-dots-vertical</v-icon>
         </v-btn>
+        <ThreeDots v-model:show="showThreeDots" @menu-action="handleMenuAction" />
       </div>
     </div>
     
@@ -107,9 +108,13 @@
 
 <script>
 import { ref, onMounted, watch, computed, nextTick } from 'vue';
+import ThreeDots from './ThreeDots.vue';
 
 export default {
   name: 'ChatArea',
+  components: {
+    ThreeDots
+  },
   props: {
     chat: {
       type: Object,
@@ -131,9 +136,9 @@ export default {
   setup(props, { emit }) {
     const newMessage = ref('');
     const showSearch = ref(false);
+    const showThreeDots = ref(false);
     const searchValue = ref('');
     const messagesContainer = ref(null);
-    
     // Mobil cihazlarda geri tuşuna basıldığında
     const goBack = () => {
       emit('back-to-chats');
@@ -197,6 +202,24 @@ export default {
       });
     }, { deep: true });
     
+    // Menü aksiyonlarını işle
+    const handleMenuAction = (action) => {
+      switch(action) {
+        case 'profile':
+          emit('toggle-profile');
+          break;
+        case 'block':
+          emit('block-contact', props.chat.contact.id);
+          break;
+        case 'report':
+          emit('report-contact', props.chat.contact.id);
+          break;
+        case 'delete':
+          emit('delete-chat', props.chat.id);
+          break;
+      }
+    };
+    
     // Bileşen yüklendiğinde
     onMounted(() => {
       if (messagesContainer.value) {
@@ -215,13 +238,15 @@ export default {
     return {
       newMessage,
       showSearch,
+      showThreeDots,
       searchValue,
       messagesContainer,
       sendMessage,
       clearSearch,
       highlightText,
       formatTime,
-      goBack
+      goBack,
+      handleMenuAction
     };
   }
 };
@@ -290,7 +315,7 @@ export default {
 
 .search-bar {
   display: flex;
-  padding: 8px 16px;
+  padding: 8px 16 px;
   background-color: #f0f2f5;
   border-bottom: 1px solid #d1d7db;
   align-items: center;
@@ -324,9 +349,7 @@ export default {
 }
 
 .message {
-  margin-bottom: 8px;
   max-width: 65%;
-  
   &.sent {
     align-self: flex-end;
     
@@ -368,7 +391,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 11px;
+  font-size: 12px;
   color: #667781;
 }
 
@@ -389,13 +412,13 @@ export default {
 .message-input {
   flex: 1;
   margin: 0 10px;
-  background-color: white;
-  border-radius: 20px;
+  background-color: #f0f2f5;
+  border-radius: 2px;
   overflow: hidden;
   max-height: 150px;
   
   .message-textarea {
-    padding: 9px 12px;
+    
     max-height: 100px;
   }
 }

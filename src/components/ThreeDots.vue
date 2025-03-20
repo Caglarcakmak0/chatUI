@@ -1,0 +1,88 @@
+<template>
+  <div class="three-dots-menu" v-if="show">
+    <ul class="menu-list">
+      <li class="menu-item" @click="handleAction('profile')">Kişi Bilgisi</li>
+      <li class="menu-item" @click="handleAction('block')">Engelle</li>
+      <li class="menu-item" @click="handleAction('report')">Şikayet Et</li>
+      <li class="menu-item" @click="handleAction('delete')">Sohbeti Sil</li>
+    </ul>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+
+export default {
+  name: 'ThreeDots',
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    }
+  },
+  setup(props, { emit }) {
+    // Menü aksiyonlarını dinleme ve olayları yönetme
+    const handleAction = (action) => {
+      emit('menu-action', action);
+      emit('update:show', false); // Menüyü otomatik kapat
+    };
+
+    // Dışarıya tıklandığında menüyü kapatmak için
+    const handleClickOutside = (event) => {
+      if (props.show && !event.target.closest('.three-dots-menu') && !event.target.closest('.menu-trigger')) {
+        emit('update:show', false);
+      }
+    };
+
+    // Component yüklendiğinde dışarı tıklamayı dinle
+    onMounted(() => {
+      document.addEventListener('click', handleClickOutside);
+    });
+
+    // Component kaldırıldığında dinlemeyi durdur
+    onUnmounted(() => {
+      document.removeEventListener('click', handleClickOutside);
+    });
+
+    return {
+      handleAction
+    };
+  }
+};
+</script>
+
+<style scoped lang="scss">
+.three-dots-menu {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  width: 180px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow: hidden;
+
+  .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu-item {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &:active {
+      background-color: #e0e0e0;
+    }
+  }
+}
+</style>

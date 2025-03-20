@@ -3,12 +3,12 @@
     <div class="welcome-content">
       <div class="welcome-image">
         <v-img
-          src="https://web.whatsapp.com/img/intro-connection-light_c98cc75f2aa905314d74375a975d2cf2.jpg"
+          src="/public/welcomeImage.png"
           width="250"
           aspect-ratio="1"
         ></v-img>
       </div>
-      <h1 class="welcome-title">Mobil Cihazınız Bağlı Kalın</h1>
+      <h1 class="welcome-title">Mobil Cihazınız ile Bağlı Kalın</h1>
       <div class="welcome-text">
         <p>Mesajlarınızı görmek ve göndermek için soldaki bir sohbeti seçin.</p>
         <p>WhatsApp Web uygulamasını, bilgisayarınızda WhatsApp'ı açmak için kullanabilirsiniz.</p>
@@ -43,7 +43,12 @@ export default {
 }
 
 .welcome-image {
-  margin: 0 auto 40px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 30px;
+  width: 20%;
 }
 
 .welcome-title {
@@ -71,7 +76,7 @@ export default {
   justify-content: center;
   
   .encryption-text {
-    margin-left: 5px;
+    margin-left:  5px;
   }
 }
 </style> 

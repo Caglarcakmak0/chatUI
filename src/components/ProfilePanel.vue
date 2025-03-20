@@ -30,7 +30,7 @@
       <!-- Medya bölümü -->
       <div class="profile-section">
         <div class="section-header">
-          <h4 class="section-title">Medya, bağlantılar ve belgeler</h4>
+          <h4 class="section-title">Medya, Bağlantılar ve Belgeler</h4>
           <v-btn variant="text" density="comfortable" class="section-action">
             {{ profile.media.length }} <v-icon>mdi-chevron-right</v-icon>
           </v-btn>
@@ -73,7 +73,7 @@
         <v-btn color="error" prepend-icon="mdi-block-helper" block>
           {{ profile.name }} kişisini engelle
         </v-btn>
-        <v-btn color="error" prepend-icon="mdi-thumb-down" class="mt-2" block>
+        <v-btn color="error" prepend-icon="mdi-alert" class="mt-2" block>
           {{ profile.name }} kişisini bildir
         </v-btn>
       </div>
@@ -113,7 +113,7 @@ export default {
 .profile-panel {
   background-color: white;
   height: 100%;
-  width: 320px;
+  width: 360px;
   position: absolute;
   top: 0;
   right: 0;
@@ -252,6 +252,7 @@ export default {
 
 .profile-actions {
   margin-top: 30px;
+  width: 100%;
 }
 
 .section-action {
