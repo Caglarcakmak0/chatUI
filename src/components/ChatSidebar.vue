@@ -3,7 +3,7 @@
     <!-- Başlık ve arama -->
     <div class="sidebar-header ">
       <div class="user-avatar">
-        <v-avatar size="40" color="green">
+        <v-avatar size="40" color="green" @click="$emit('toggle-profile')">
           <v-icon icon="mdi-account"></v-icon>
         </v-avatar>
       </div>

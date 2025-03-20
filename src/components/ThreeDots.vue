@@ -2,10 +2,22 @@
   <div class="three-dots-menu" v-if="show">
     <ul class="menu-list">
       <li class="menu-item" @click="handleAction('profile')">Kişi Bilgisi</li>
-      <li class="menu-item" @click="handleAction('block')">Engelle</li>
+      <li class="menu-item" @click="handleAction('block')">
+        {{ isBlocked ? 'Engeli Kaldır' : 'Engelle' }}
+      </li>
       <li class="menu-item" @click="handleAction('report')">Şikayet Et</li>
       <li class="menu-item" @click="handleAction('delete')">Sohbeti Sil</li>
     </ul>
+    
+    <!-- Engelleme Bildirimi -->
+    <v-snackbar
+      v-model="showBlockNotification"
+      :timeout="3000"
+      color="success"
+      location="top"
+    >
+      {{ blockNotificationText }}
+    </v-snackbar>
   </div>
 </template>
 
@@ -17,10 +29,26 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    contact: {
+      type: Object,
+      required: true
     }
   },
   setup(props, { emit }) {
+    const isBlocked = ref(false);
+    const showBlockNotification = ref(false);
+    const blockNotificationText = ref('');
+
     const handleAction = (action) => {
+      if (action === 'block') {
+        isBlocked.value = !isBlocked.value;
+        blockNotificationText.value = isBlocked.value
+          ? `${props.contact.name} kişisi engellendi. Bu kişi artık size mesaj gönderemez.`
+          : `${props.contact.name} kişisinin engeli kaldırıldı.`;
+        showBlockNotification.value = true;
+        emit('block-contact', { contactId: props.contact.id, blocked: isBlocked.value });
+      }
       emit('menu-action', action);
       emit('update:show', false); //menü otomatikkapanır
     };
@@ -38,7 +66,10 @@ export default {
       document.removeEventListener('click', handleClickOutside);
     });
     return {
-      handleAction
+      handleAction,
+      isBlocked,
+      showBlockNotification,
+      blockNotificationText
     };
   }
 };

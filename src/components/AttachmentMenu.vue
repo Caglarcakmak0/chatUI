@@ -1,5 +1,12 @@
 <template>
   <div class="attachment-menu" v-if="show">
+    <input
+      type="file"
+      ref="fileInput"
+      @change="handleFileSelect"
+      style="display: none"
+      :accept="currentFileType"
+    />
     <ul class="menu-list">
       <li class="menu-item" @click="handleAction('photo')">
         <v-icon class="menu-icon">mdi-image</v-icon>
@@ -30,7 +37,7 @@
 </template>
 
 <script>
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 export default {
   name: 'AttachmentMenu',
@@ -41,10 +48,36 @@ export default {
     }
   },
   
+
+
+  
   setup(props, { emit }) {
+    const fileInput = ref(null);
+    const currentFileType = ref('');
+
     const handleAction = (action) => {
-      emit('attachment-action', action);
-      emit('update:show', false); // Menüyü otomatik kapat
+      switch(action) {
+        case 'photo':
+          currentFileType.value = 'image/*';
+          fileInput.value.click();
+          break;
+        case 'document':
+          currentFileType.value = '.pdf,.doc,.docx,.txt';
+          fileInput.value.click();
+          break;
+        default:
+          emit('attachment-action', action);
+      }
+      emit('update:show', false);
+    };
+
+    const handleFileSelect = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        emit('file-selected', file);
+      }
+      // Dosya seçiciyi sıfırla
+      event.target.value = '';
     };
 
     const handleClickOutside = (event) => {
@@ -56,7 +89,7 @@ export default {
     };
     
     onMounted(() => {   
-      document.addEventListener('click', handleClickOutside); // Dışarı tıklanma fonksiyonu
+      document.addEventListener('click', handleClickOutside);
     });
 
     onUnmounted(() => {
@@ -64,7 +97,10 @@ export default {
     });
     
     return {
-      handleAction
+      handleAction,
+      handleFileSelect,
+      fileInput,
+      currentFileType
     };
   }
 };

@@ -23,7 +23,12 @@
         <v-btn icon variant="text" class="menu-trigger">
           <v-icon @click="showThreeDots = !showThreeDots">mdi-dots-vertical</v-icon>
         </v-btn>
-        <ThreeDots v-model:show="showThreeDots" @menu-action="handleMenuAction" />
+        <ThreeDots 
+          v-model:show="showThreeDots" 
+          :contact="chat.contact"
+          @menu-action="handleMenuAction"
+          @block-contact="$emit('block-contact', $event)" 
+        />
       </div>
     </div>
     <div v-if="showSearch" class="search-bar">
@@ -51,27 +56,31 @@
     </div>
     <div class="messages-container" ref="messagesContainer">
       <div class="messages-list">
-        <div 
-          v-for="message in messages" 
-          :key="message.id" 
-          class="message"
-          :class="[message.sender === 'me' ? 'sent' : 'received']"
-        >
-          <div class="message-content">
-            <div class="message-text" v-html="highlightText(message.text)"></div>
-            <div class="message-meta">
-              <span class="message-time">{{ formatTime(message.timestamp) }}</span>
-              <span v-if="message.sender === 'me'" class="message-status">
-                <v-icon
-                  size="small"
-                  :color="message.status === 'read' ? 'primary' : 'grey'"
-                >
-                  {{ message.status === 'read' ? 'mdi-check-all' : 'mdi-check' }}
-                </v-icon>
-              </span>
+        <template v-for="(message, index) in messages" :key="message.id">
+          <!-- Tarih bubble'ı -->
+          <div v-if="shouldShowDate(message, messages[index-1])" class="date-bubble">
+            <span>{{ formatDate(message.timestamp) }}</span>
+          </div>
+          <div 
+            class="message"
+            :class="[message.sender === 'me' ? 'sent' : 'received']"
+          >
+            <div class="message-content">
+              <div class="message-text" v-html="highlightText(message.text)"></div>
+              <div class="message-meta">
+                <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+                <span v-if="message.sender === 'me'" class="message-status">
+                  <v-icon
+                    size="small"
+                    :color="message.status === 'read' ? 'primary' : 'grey'"
+                  >
+                    {{ message.status === 'read' ? 'mdi-check-all' : 'mdi-check' }}
+                  </v-icon>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
     <div class="message-input-container">
@@ -258,6 +267,34 @@ export default {
       showEmojiPicker.value = !showEmojiPicker.value;
     };
     
+    const formatDate = (timestamp) => {
+      const date = new Date(timestamp);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      if (date.toDateString() === today.toDateString()) {
+        return 'Bugün';
+      } else if (date.toDateString() === yesterday.toDateString()) {
+        return 'Dün';
+      } else {
+        return date.toLocaleDateString('tr-TR', { 
+          day: 'numeric', 
+          month: 'long', 
+          year: 'numeric' 
+        });
+      }
+    };
+
+    const shouldShowDate = (currentMessage, previousMessage) => {
+      if (!previousMessage) return true;
+      
+      const currentDate = new Date(currentMessage.timestamp).toDateString();
+      const previousDate = new Date(previousMessage.timestamp).toDateString();
+      
+      return currentDate !== previousDate;
+    };
+    
     onMounted(() => {
       if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
@@ -281,6 +318,8 @@ export default {
       clearSearch,
       highlightText,
       formatTime,
+      formatDate,
+      shouldShowDate,
       goBack,
       handleMenuAction,
       handleAttachmentAction,
@@ -395,6 +434,9 @@ export default {
     .message-content {
       background-color: #dcf8c6;
       border-radius: 8px 8px 0px 8px;
+      padding: 0.3rem 0.6rem 0.2rem 1rem;
+      display: flex;
+      gap: 1rem;
     }
   }
   &.received {
@@ -402,6 +444,9 @@ export default {
     .message-content {
       background-color: white;
       border-radius: 8px 8px 8px 0px;
+      padding: 0.3rem 0.6rem 0.2rem 1rem;
+      display: flex;
+      gap: 1rem;
     }
   }
 }
@@ -512,7 +557,7 @@ export default {
   }
 
   .picker-container {
-    width: 320px;
+    width: 400px;
     
     :deep(.v3-emoji-picker) {
       width: 100% !important;
@@ -531,6 +576,23 @@ export default {
     .picker-container {
       width: 100%;
     }
+  }
+}
+.date-bubble {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 12px;
+  
+  span {
+    background-color: #E7F0F5;
+    color: #54656f;
+    font-size: 12.5px;
+    padding: 5px 12px;
+    border-radius: 7px;
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+    font-weight: 500;
+    user-select: none;
   }
 }
 </style> 
