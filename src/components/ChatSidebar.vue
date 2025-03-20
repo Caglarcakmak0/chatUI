@@ -120,7 +120,7 @@ export default {
 <style scoped lang="scss">
 .chat-sidebar {
   background-color: #fff;
-  display: flex;
+ display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
@@ -129,7 +129,7 @@ export default {
   
   @media (max-width: 768px) {
     min-width: 100%;
-    position: fixed;
+  position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -172,6 +172,7 @@ export default {
 
 .chat-item {
   display: flex;
+
   padding: 12px 16px;
   border-bottom: 1px solid #f0f2f5;
   cursor: pointer;
@@ -239,6 +240,7 @@ export default {
   margin: 0;
   font-size: 14px;
   color: #667781;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

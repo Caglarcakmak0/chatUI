@@ -74,13 +74,19 @@
         </div>
       </div>
     </div>
-        <div class="message-input-container">
-      <v-btn icon variant="text">
+    <div class="message-input-container">
+      <v-btn icon variant="text" @click="toggleEmojiPicker">
         <v-icon>mdi-emoticon-outline</v-icon>
       </v-btn>
-      <v-btn icon variant="text">
+      <div class="emoji-picker-wrapper" :class="{ show: showEmojiPicker }">
+        <div v-if="showEmojiPicker" class="picker-container">
+          <VEmojiPicker @select="onEmojiSelect" />
+        </div>
+      </div>
+      <v-btn icon variant="text" class="attachment-trigger" @click="showAttachmentMenu = !showAttachmentMenu">
         <v-icon>mdi-paperclip</v-icon>
       </v-btn>
+      <AttachmentMenu v-model:show="showAttachmentMenu" @attachment-action="handleAttachmentAction" />
       <div class="message-input">
         <v-textarea
           v-model="newMessage"
@@ -102,10 +108,16 @@
 <script>
 import { ref, onMounted, watch, computed, nextTick } from 'vue';
 import ThreeDots from './ThreeDots.vue';
+import AttachmentMenu from './AttachmentMenu.vue';
+import VEmojiPicker from 'vue3-emoji-picker';
+import 'vue3-emoji-picker/css';
+
 export default {
   name: 'ChatArea',
   components: {
-    ThreeDots
+    ThreeDots,
+    AttachmentMenu,
+    VEmojiPicker
   },
   props: {
     chat: {
@@ -129,8 +141,11 @@ export default {
     const newMessage = ref('');
     const showSearch = ref(false);
     const showThreeDots = ref(false);
+    const showAttachmentMenu = ref(false);
     const searchValue = ref('');
     const messagesContainer = ref(null);
+    const showEmojiPicker = ref(false);
+    
     const goBack = () => {
       emit('back-to-chats');  
       setTimeout(() => {
@@ -192,7 +207,57 @@ export default {
           emit('delete-chat', props.chat.id);
           break;
       }
-    };   
+    };
+    
+    const handleAttachmentAction = (action) => {
+      // Eklenti eylemlerini işle
+      console.log(`Eklenti eylemi: ${action}`);
+      switch(action) {
+        case 'photo':
+          // Fotoğraf/video galerisi göster
+          emit('show-media-gallery');
+          break;
+        case 'camera':
+          // Kamerayı aç
+          emit('open-camera');
+          break;
+        case 'document':
+          // Belge seçiciyi aç
+          emit('open-document-picker');
+          break;
+        case 'contact':
+          // Kişi seçiciyi aç
+          emit('open-contact-picker');
+          break;
+        case 'poll':
+          // Anket oluşturucuyu aç
+          emit('create-poll');
+          break;
+        case 'drawing':
+          // Çizim alanını aç
+          emit('open-drawing');
+          break;
+      }
+    };
+    
+    const onEmojiSelect = (emoji) => {
+      console.log('Emoji seçildi:', emoji);
+      // Emoji nesnesinden unicode karakterini alıyoruz
+      if (typeof emoji === 'object' && emoji.data) {
+        newMessage.value += emoji.data;
+      } else if (typeof emoji === 'object' && emoji.i) {
+        newMessage.value += emoji.i;
+      } else if (typeof emoji === 'string') {
+        newMessage.value += emoji;
+      }
+      showEmojiPicker.value = false;
+    };
+    
+    const toggleEmojiPicker = () => {
+      console.log('Emoji picker toggle:', !showEmojiPicker.value);
+      showEmojiPicker.value = !showEmojiPicker.value;
+    };
+    
     onMounted(() => {
       if (messagesContainer.value) {
         messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
@@ -209,6 +274,7 @@ export default {
       newMessage,
       showSearch,
       showThreeDots,
+      showAttachmentMenu,
       searchValue,
       messagesContainer,
       sendMessage,
@@ -216,7 +282,11 @@ export default {
       highlightText,
       formatTime,
       goBack,
-      handleMenuAction
+      handleMenuAction,
+      handleAttachmentAction,
+      showEmojiPicker,
+      toggleEmojiPicker,
+      onEmojiSelect
     };
   }
 };
@@ -233,8 +303,7 @@ export default {
   position: relative;
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
-  
+  overflow: hidden;  
   @media (max-width: 768px) {
     position: fixed;
     top: 0;
@@ -316,22 +385,23 @@ export default {
   flex-direction: column;
 }
 
-
-
+.message.received:after {
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
 .message {
   max-width: 65%;
   &.sent {
     align-self: flex-end;
     .message-content {
       background-color: #dcf8c6;
-      border-radius: 8px 0 8px 8px;
+      border-radius: 8px 8px 0px 8px;
     }
   }
   &.received {
     align-self: flex-start; 
     .message-content {
       background-color: white;
-      border-radius: 0 8px 8px 8px;
+      border-radius: 8px 8px 8px 0px;
     }
   }
 }
@@ -340,7 +410,9 @@ export default {
   padding: 8px 12px;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
 }
-
+.message.sent:after {
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
 .message-text {
   font-size: 14px;
   margin-bottom: 5px;
@@ -371,6 +443,7 @@ export default {
   border-top: 1px solid #d1d7db;
   min-height: 60px;
   width: 100%;
+  position: relative;
 }
 .message-input {
   flex: 1;
@@ -421,6 +494,43 @@ export default {
   }
   .message-input-container {
     padding: 6px 8px;
+  }
+}
+.emoji-picker-wrapper {
+  position: absolute;
+  bottom: 70px;
+  left: 10px;
+  z-index: 9999;
+  display: none;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  padding: 8px;
+
+  &.show {
+    display: block;
+  }
+
+  .picker-container {
+    width: 320px;
+    
+    :deep(.v3-emoji-picker) {
+      width: 100% !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    
+    .picker-container {
+      width: 100%;
+    }
   }
 }
 </style> 
