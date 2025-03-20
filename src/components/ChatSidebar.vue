@@ -89,35 +89,22 @@ export default {
                chat.lastMessage.text.toLowerCase().includes(query);
       });
     });
-    // Sohbet seçildiğinde tetiklenir
     const onChatSelect = (chat) => {
       emit('select-chat', chat);
       
-      // Mobil cihazlar için özel işlem
       if (window.innerWidth < 768) {
-        // Sohbet listesini gizle (250ms gecikmeli)
         setTimeout(() => {
           const sidebar = document.querySelector('.chat-sidebar');
           if (sidebar) {
             sidebar.classList.add('hidden');
           }
-        }, 250);
+        }, 250); //gecikme
       }
     };
-    // Zaman formatı
+    
     const formatTime = (timestamp) => {
       const date = new Date(timestamp);
       const now = new Date();
-      // Aynı gün içindeyse saat:dakika formatında göster
-      if (date.toDateString() === now.toDateString()) {
-        return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-      }
-      // Aynı hafta içindeyse gün adını göster
-      const daysDiff = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-      if (daysDiff < 7) {
-        return date.toLocaleDateString('tr-TR', { weekday: 'short' });
-      }
-      // Diğer durumlar için gün/ay formatı
       return date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
     };
     return {
@@ -181,8 +168,8 @@ export default {
 .chats-list {
   overflow-y: auto;
   flex: 1;
-  height: calc(100% - 116px); // Adjust based on header + search heights
-}
+  height: calc(100% - 100px);
+  }
 
 .chat-item {
   display: flex;
@@ -270,6 +257,9 @@ export default {
   }
   .avatar {
     margin-right: 10px;
+  }
+  .chats-list {
+    height: calc(100% - 100px);
   }
 }
 

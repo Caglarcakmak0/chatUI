@@ -126,7 +126,7 @@ export default {
     transform: translateX(0);
   }
   @media (max-width: 992px) {
-    width: 280px;
+    width: 350px;
   }
   
   @media (max-width: 768px) {
@@ -268,7 +268,7 @@ export default {
     padding: 8px;
   } 
 .panel-content {
-    padding: 10px;
+    padding: 12px;
   }
   .profile-section {
     margin-bottom: 15px;

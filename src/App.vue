@@ -42,7 +42,7 @@ import ChatSidebar from './components/ChatSidebar.vue';
 import ChatArea from './components/ChatArea.vue';
 import ProfilePanel from './components/ProfilePanel.vue';
 import WelcomeScreen from './components/WelcomeScreen.vue';
-import { DummyData, generateMockData } from './utils/mockData';
+import { DummyData } from './utils/mockData';
 
 export default {
   name: 'App',

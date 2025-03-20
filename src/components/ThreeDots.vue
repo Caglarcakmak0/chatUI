@@ -30,7 +30,7 @@ export default {
         emit('update:show', false);
       }
     };
-    onMounted(() => {
+    onMounted(() => {   
       document.addEventListener('click', handleClickOutside);//dışarıtıklanmafonksiyonu
     });
 

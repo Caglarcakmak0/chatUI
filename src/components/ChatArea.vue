@@ -180,7 +180,6 @@ export default {
         }
       });
     }, { deep: true });   
-    // Menü aksiyonlarını işle
     const handleMenuAction = (action) => {
       switch(action) {
         case 'profile':
@@ -404,7 +403,7 @@ export default {
     margin-left: 0;
   }
   .message {
-    padding: 15px;
+    padding: 1px;
     max-height: calc(100% - 110px);
   }
   .message-input-container {
