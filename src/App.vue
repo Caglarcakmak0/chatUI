@@ -20,7 +20,6 @@
           @toggle-profile="toggleProfile"
           @send-message="sendMessage"
           @search-messages="searchMessages"
-          @block-contact="handleBlockContact"
           class="chat-area-component"
         />
         <welcome-screen v-else />
@@ -30,7 +29,6 @@
           :profile="selectedChat.contact"
           :isOpen="isProfileOpen"
           @close="closeProfile"
-          @block-contact="handleBlockContact"
         />
       </div>
     </v-main>
@@ -129,14 +127,6 @@ export default {
         timestamp: new Date().toISOString()
       };
     };
-
-    const handleBlockContact = ({ contactId, blocked }) => {
-      const chat = chats.value.find(c => c.contact.id === contactId);
-      if (chat) {
-        chat.contact.isBlocked = blocked;
-      }
-    };
-
     const checkScreenSize = () => {
       isMobile.value = window.innerWidth < 768;
     };
@@ -161,8 +151,7 @@ export default {
       closeProfile,
       backToChats,
       searchMessages,
-      sendMessage,
-      handleBlockContact
+      sendMessage
     };
   }
 };

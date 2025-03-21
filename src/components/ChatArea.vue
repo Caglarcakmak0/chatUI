@@ -23,12 +23,7 @@
         <v-btn icon variant="text" class="menu-trigger">
           <v-icon @click="showThreeDots = !showThreeDots">mdi-dots-vertical</v-icon>
         </v-btn>
-        <ThreeDots 
-          v-model:show="showThreeDots" 
-          :contact="chat.contact"
-          @menu-action="handleMenuAction"
-          @block-contact="$emit('block-contact', $event)" 
-        />
+        <ThreeDots v-model:show="showThreeDots" @menu-action="handleMenuAction" />
       </div>
     </div>
     <div v-if="showSearch" class="search-bar">
@@ -56,12 +51,15 @@
     </div>
     <div class="messages-container" ref="messagesContainer">
       <div class="messages-list">
-        <template v-for="(message, index) in messages" :key="message.id">
-          <!-- Tarih bubble'ı -->
-          <div v-if="shouldShowDate(message, messages[index-1])" class="date-bubble">
-            <span>{{ formatDate(message.timestamp) }}</span>
+        <template v-for="(messageGroup, date) in groupedMessages" :key="date">
+          <div class="date-batch-wrapper">
+            <div class="date-batch">
+              {{ formatDateBatch(date) }}
+            </div>
           </div>
           <div 
+            v-for="message in messageGroup" 
+            :key="message.id" 
             class="message"
             :class="[message.sender === 'me' ? 'sent' : 'received']"
           >
@@ -267,32 +265,40 @@ export default {
       showEmojiPicker.value = !showEmojiPicker.value;
     };
     
-    const formatDate = (timestamp) => {
-      const date = new Date(timestamp);
+    const groupedMessages = computed(() => {
+      const groups = {};
+      
+      props.messages.forEach(message => {
+        const date = new Date(message.timestamp);
+        const dateKey = date.toDateString(); // Her gün için benzersiz bir anahtar
+        
+        if (!groups[dateKey]) {
+          groups[dateKey] = [];
+        }
+        
+        groups[dateKey].push(message);
+      });
+      
+      return groups;
+    });
+
+    const formatDateBatch = (dateString) => {
+      const date = new Date(dateString);
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(yesterday.getDate() - 1);
-
+      
       if (date.toDateString() === today.toDateString()) {
         return 'Bugün';
       } else if (date.toDateString() === yesterday.toDateString()) {
         return 'Dün';
       } else {
-        return date.toLocaleDateString('tr-TR', { 
-          day: 'numeric', 
-          month: 'long', 
-          year: 'numeric' 
+        return date.toLocaleDateString('tr-TR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
         });
       }
-    };
-
-    const shouldShowDate = (currentMessage, previousMessage) => {
-      if (!previousMessage) return true;
-      
-      const currentDate = new Date(currentMessage.timestamp).toDateString();
-      const previousDate = new Date(previousMessage.timestamp).toDateString();
-      
-      return currentDate !== previousDate;
     };
     
     onMounted(() => {
@@ -318,14 +324,14 @@ export default {
       clearSearch,
       highlightText,
       formatTime,
-      formatDate,
-      shouldShowDate,
       goBack,
       handleMenuAction,
       handleAttachmentAction,
       showEmojiPicker,
       toggleEmojiPicker,
-      onEmojiSelect
+      onEmojiSelect,
+      formatDateBatch,
+      groupedMessages
     };
   }
 };
@@ -413,10 +419,29 @@ export default {
   }
 }
 .messages-container {
+  position: relative;
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-  max-height: calc(100% - 120px); // Adjust based on header + input heights
+  max-height: calc(100% - 120px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../assets/bg.png');
+    background-repeat: repeat;
+    opacity: 0.5;
+    z-index: 0;
+  }
+
+  .messages-list {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .messages-list {
@@ -435,8 +460,9 @@ export default {
       background-color: #dcf8c6;
       border-radius: 8px 8px 0px 8px;
       padding: 0.3rem 0.6rem 0.2rem 1rem;
-      display: flex;
-      gap: 1rem;
+    display: flex;
+    gap: 1rem;
+
     }
   }
   &.received {
@@ -445,8 +471,8 @@ export default {
       background-color: white;
       border-radius: 8px 8px 8px 0px;
       padding: 0.3rem 0.6rem 0.2rem 1rem;
-      display: flex;
-      gap: 1rem;
+    display: flex;
+    gap: 1rem;
     }
   }
 }
@@ -557,7 +583,7 @@ export default {
   }
 
   .picker-container {
-    width: 400px;
+    width: 320px;
     
     :deep(.v3-emoji-picker) {
       width: 100% !important;
@@ -578,21 +604,27 @@ export default {
     }
   }
 }
-.date-bubble {
+.date-batch-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 8px 0;
+  background: transparent;
+}
+
+.date-batch {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px 12px;
-  
-  span {
-    background-color: #E7F0F5;
-    color: #54656f;
-    font-size: 12.5px;
-    padding: 5px 12px;
-    border-radius: 7px;
-    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
-    font-weight: 500;
-    user-select: none;
-  }
+  background-color: #5bb5ff;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow:0 7px 9.5px rgba(0, 0, 0, 0.13);
 }
 </style> 

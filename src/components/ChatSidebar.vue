@@ -3,7 +3,7 @@
     <!-- Başlık ve arama -->
     <div class="sidebar-header ">
       <div class="user-avatar">
-        <v-avatar size="40" color="green" @click="$emit('toggle-profile')">
+        <v-avatar size="40" color="green">
           <v-icon icon="mdi-account"></v-icon>
         </v-avatar>
       </div>
@@ -20,10 +20,10 @@
     <!-- Arama kutusu -->
     <div class="sidebar-search">
       <v-text-field
+        style="border-radius: 8px; height: 35px; background-color: #F0F2F5; box-shadow: none;"
         v-model="searchQuery"
         prepend-inner-icon="mdi-magnify"
         placeholder="Sohbetlerde ara"
-        variant="outlined"
         density="compact"
         hide-details
         class="search-input"
@@ -42,9 +42,9 @@
         @click="onChatSelect(chat)"
       >
         <div class="avatar">
-          <v-avatar size="50">
+          <span v-if="chat.unread" class="unread-badge">{{ chat.unread }}</span>
+          <v-avatar size="50" >
             <v-img :src="chat.contact.avatar" alt="avatar"></v-img>
-            <span v-if="chat.unread" class="unread-badge">{{ chat.unread }}</span>
           </v-avatar>
         </div>
         <div class="chat-details">
@@ -105,7 +105,7 @@ export default {
     const formatTime = (timestamp) => {
       const date = new Date(timestamp);
       const now = new Date();
-      return date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
+      return date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: '2-digit' });
     };
     return {
       searchQuery,
@@ -147,7 +147,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  background-color: #f0f2f5;
+  background-color: #fff;
   min-height: 60px;
 }
 
@@ -157,10 +157,10 @@ export default {
 
 .sidebar-search {
   padding: 8px 12px;
-  background-color: #f0f2f5;
-  
+  background-color: #fff;
+  border-radius: 8px;
   .search-input {
-    background-color: white;
+    background-color: #F0F2F5;
   }
 }
 
@@ -211,6 +211,12 @@ export default {
     align-items: center;
     justify-content: center;
     font-weight: bold;
+    z-index: 9999;
+  }
+
+  :deep(.v-avatar) {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -296,5 +302,10 @@ export default {
   .message-preview {
     font-size: 12px;
   }
+}
+
+.parent-container {
+  position: relative;
+  z-index: 1;
 }
 </style> 

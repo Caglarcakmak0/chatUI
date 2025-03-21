@@ -70,29 +70,19 @@
       
       <!-- Eylemler -->
       <div class="profile-actions">
-        <v-btn color="error" prepend-icon="mdi-block-helper" block @click="handleBlock">
-          {{ profile.name }} kişisi {{ isBlocked ? 'engelli' : 'engelle' }}
+        <v-btn color="error" prepend-icon="mdi-block-helper" block>
+          {{ profile.name }} kişisini engelle
         </v-btn>
         <v-btn color="error" prepend-icon="mdi-alert" class="mt-2" block>
           {{ profile.name }} kişisini bildir
         </v-btn>
       </div>
-
-      <!-- Engelleme Bildirimi -->
-      <v-snackbar
-        v-model="showBlockNotification"
-        :timeout="3000"
-        color="success"
-        location="top"
-      >
-        {{ blockNotificationText }}
-      </v-snackbar>
     </div>
   </div>
 </template>
 
 <script>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 export default {
   name: 'ProfilePanel',
@@ -106,31 +96,14 @@ export default {
       default: false
     }
   },
-  setup(props, { emit }) {
-    const isBlocked = ref(false);
-    const showBlockNotification = ref(false);
-    const blockNotificationText = ref('');
-
+  setup(props) {
     // En fazla 3 medya göster
     const displayedMedia = computed(() => {
       return props.profile.media.slice(0, 3);
     });
-
-    const handleBlock = () => {
-      isBlocked.value = !isBlocked.value;
-      blockNotificationText.value = isBlocked.value
-        ? `${props.profile.name} kişisi engellendi. Bu kişi artık size mesaj gönderemez.`
-        : `${props.profile.name} kişisinin engeli kaldırıldı.`;
-      showBlockNotification.value = true;
-      emit('block-contact', { contactId: props.profile.id, blocked: isBlocked.value });
-    };
     
     return {
-      displayedMedia,
-      isBlocked,
-      showBlockNotification,
-      blockNotificationText,
-      handleBlock
+      displayedMedia
     };
   }
 };
@@ -163,7 +136,7 @@ export default {
 .panel-header {
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding: 11px;
   background-color: #008069;
   color: white;
   position: sticky;
@@ -204,6 +177,8 @@ export default {
   border-bottom: 1px solid #f0f2f5;
   padding-bottom: 15px;
 }
+
+
 
 .section-header {
   display: flex;
