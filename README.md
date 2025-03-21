@@ -5,6 +5,12 @@ Bu proje, Vue.js 3 ve Vuetify kullanılarak geliştirilmiş bir offline mesajla�
 ## Özellikler
 
 - **Sohbet Listesi**: Kullanıcılar tüm sohbetlerini görüntüleyebilir ve arama yapabilir
+- **Dosya Seçimi**: Kullanıcılar dosya seçimi yapabilir.
+- **Emoji Gönderimi**: Kullanıcılar emoji seçimi yapabilir ve yollayabilir
+- **Tarih Görüntülenmesi**: Gönderilen mesajların tarihleri görülebilir
+- **Engelleme**: Kullanıcı engelleyebilir //Son Commit ile birlikte özellik bozulmuştur
+- **Mesaj bubble'ı**: Gelen mesajların bildirimi görüülebilir
+- 
 - **Mesajlaşma**: Kullanıcılar mesaj gönderebilir ve alabilir
 - **Profil Bilgileri**: Kişilerin profil bilgilerini, ortak gruplarını ve medyalarını görüntüleme
 - **Mesaj Arama**: Sohbet içinde arama yapma ve sonuçları vurgulama
